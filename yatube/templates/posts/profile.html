@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Профайл пользователя {{ author.get_full_name }} {% endblock %}
+{% block content %}
+{% load thumbnail %}
+<div class="mb-5">
+</div>
+  <div class="container py-5">
+  <h1>Все посты пользователя {{ author.first_name }} {{ author.last_name }}</h1>
+  <h3>Всего постов: {{ author.posts.count }}</h3>
+  <article>
+  <p>
+    {% for post in page_obj %}
+      <li>Автор: {{ author.get_full_name }}</li>
+      <li>Дата публикации: {{ post.pub_date|date:"d E Y" }}</li><br>
+        {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
+          <img class="card-img my-2" src="{{ im.url }}">
+        {% endthumbnail %}
+      {{ post }}
+  </p>
+      <a href="{% url 'posts:post_detail' post.id %}">читать</a><br>
+      {% if user == post.author %}
+        <a href="{% url 'posts:edit' post.id %}">редактировать пост</a><br>
+      {% endif %}
+      {% if post.group %}
+      <a href="{% url 'posts:group' post.group.slug %}">все записи группы</a>
+      {% endif %}<br>
+      <a href="{% url 'posts:profile' post.author %}">все посты пользователя</a>
+    <hr>
+    {% endfor %}
+  </article>
+  {% include 'posts/includes/paginator.html' %}
+  </div>
+
+<h1>Остальные посты</h1><br>
+  {% for post in posts_other %}
+    <p><li>Автор: {{ post.author.get_full_name }}
+      </li>
+      <li>Дата публикации: {{ post.pub_date|date:"d E Y" }}</li><br>
+      {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
+        <img class="card-img my-2" src="{{ im.url }}">
+      {% endthumbnail %}
+      {{ post }}
+    </p>
+      {% if post.group %}
+    <a href="{% url 'posts:group' post.group.slug %}">все записи группы</a>
+    {% endif %}<br>
+    <a href="{% url 'posts:profile' post.author %}">все посты пользователя</a>
+    <hr>
+    <br>
+  {% endfor %}
+{% include 'posts/includes/paginator.html' %}
+{% endblock %}

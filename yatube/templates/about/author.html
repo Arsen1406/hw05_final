@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Об авторе проекта{% endblock %}
+{% block content %}
+<style type="text/css">
+    .tab1
+    {
+    position: absolute; left:38%;
+    }
+    .tab2
+    {
+    position: absolute; left:13%;
+    }
+</style>
+<h1 align="center">Привет, меня зовут Арсен Григорян</h1><br>
+<img src="{% static 'img/my_photo.jpg' %}" width="25%" align="left" hspace="10">
+    <p>Я занимаюсь backend разработкой. Этот сайт - моё творение. Я написал его в
+    рамках прохождения курса "Python backend developer" в Яндекс Практикум.
+    Это один из проектов. На моём <a href="https://github.com/Arsen1406" target="_blank">GitHub</a>
+    есть и другие проекты. Я планирую написать очень много интересных проектов.
+    В Яндекс Практикум я изучил:
+    <li>Python</li>
+    <li>Django</li>
+    <li>ORM Запросы в БД</li>
+    <li>Объектно-ориентированное программирование</li>
+    <li>Базово MySql</li>
+    <li>Базово Html верстка</li>
+    <li><a href="{% static 'doc/resum.pdf' %}" target="_blank">Мое резюме</a></li>
+Дальше я планирую развиваться в этом направлении. Мне очень нравится работать
+    в web разработке.</p><br>
+
+<h2 align="center">Немного о себе</h2><br>
+<p><img src="{% static 'img/snow.jpeg' %}" width="25%" align="left" hspace="10">
+    Web разработка это не только работа, но и одно из моих увлечений.<br>
+    Как говорил Конфуций: "Найди себе дело по душе и тебе не прийдётся
+    работать ни дня в своей жизни"&#128578<br>
+    Так же я люблю кататься на сноуборде&#127938<br>
+    Люблю путешевствовать&#127759<br>
+    Хожу в походы&#127957<br>
+    Катаюсь на велосипедах&#128692<br>
+    P.S. На фото я и моя супруга))</p><br><br>
+<h2 align="center">Как со мной связаться</h2><br>
+    <p align="center">&#128222 Tel: +7(962) 872-87-87<br>
+        &#9000 Telegram: <a href="https://t.me/@arsen1406" target="_blank">@arsen1406</a><br>
+        &#128241 WhatsApp: <a href="https://wa.me/89628728787" target="_blank">+7(962) 872-87-87</a><br>
+        &#128231 Email: <a href="mailto:arsen8577711@yandex.ru" target="_blank">arsen8577711@yandex.ru</a><br>
+        &#128450 GitHub: <a href="https://github.com/Arsen1406" target="_blank">Arsen1406</a><br>
+    </p>
+{% endblock %}

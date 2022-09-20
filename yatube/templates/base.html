@@ -1,0 +1,15 @@
+{% load static %}
+<title>
+  {% block title %}
+  {% endblock %}
+</title>
+<body>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  {% include "includes/header.html" %}
+  <main>
+    <div class="container py-5">
+    {% block content %}
+    {% endblock %}
+  </main>
+  {% include 'includes/footer.html' %}
+</body>
