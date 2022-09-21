@@ -63,3 +63,21 @@ class Comment(models.Model):
     created = models.DateTimeField(
         auto_now_add=True
     )
+
+    def __str__(self):
+        return self.text
+
+
+class Follow(models.Model):
+    user = models.ForeignKey(
+        User,
+        related_name='follower',
+        on_delete=models.CASCADE,
+        verbose_name='Пользователь'
+    )
+    author = models.ForeignKey(
+        User,
+        related_name='following',
+        on_delete=models.CASCADE,
+        verbose_name='Автор'
+    )
