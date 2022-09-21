@@ -34,13 +34,9 @@ def profile(request, username):
     posts = Post.objects.filter(author=author).order_by('-pub_date')
     posts_other = Post.objects.exclude(author=author)
     page_obj = get_paginated_post(request, posts)
-    follow = Follow.objects.filter(author_id=author.id)
     count_followers = Follow.objects.filter(author=author).count
-    following = False
-    for fol in follow:
-        if fol.user_id == request.user.id:
-            following = True
-            break
+    following = request.user.is_authenticated and Follow.objects.filter(
+        user=request.user, author=author).exists()
     context = {
         'count_followers': count_followers,
         'user': request.user,
@@ -56,7 +52,7 @@ def profile(request, username):
 def post_detail(request, post_id):
     post = Post.objects.get(id=post_id)
     form = CommentForm(request.POST or None)
-    comments = Comment.objects.filter(post_id=post_id).order_by('-created')
+    comments = post.comments.all().order_by('-created')
     context = {
         'post': post,
         'form': form,
@@ -69,7 +65,6 @@ def post_detail(request, post_id):
 @login_required
 def post_create(request):
     user = request.user
-    main = 'Создать пост от имени'
     form = PostForm(
         request.POST or None,
         files=request.FILES or None,
@@ -81,7 +76,6 @@ def post_create(request):
         return redirect('posts:profile', username=user.username)
 
     context = {
-        'main': main,
         'user': user,
         'is_edit': False,
         'form': form

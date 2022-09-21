@@ -5,7 +5,7 @@
 <div class="mb-5">
   <h1><span class="badge text-bg-primary">Все посты пользователя {{ author.get_full_name }}</span></h1>
   <h3><span class="badge text-bg-info">Всего постов: {{ author.posts.count }}</span></h3>
-  <h3><span class="badge text-bg-warning">Всего подписчиков {{ count_followers }}</span></h3>
+  <h3><span class="badge text-bg-warning">Всего подписчиков {{ author.following.count }}</span></h3>
    {% if user == author %}
   {% else %}
   {% if following %}
@@ -34,7 +34,7 @@
       {% endthumbnail %}
       {{ post }}
     </p>
-    <a href="{% url 'posts:post_detail' post.id %}">читать</a><br>
+    <a href="{% url 'posts:post_detail' post.id %}">читать полностью</a><br>
     {% if user == post.author %}
       <a href="{% url 'posts:edit' post.id %}">редактировать пост</a><br>
     {% endif %}

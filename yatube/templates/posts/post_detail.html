@@ -17,7 +17,7 @@
         </a>
       </li>
       <li class="list-group-item">
-        Автор: {{ post.author.first_name }} {{ post.author.last_name }}
+        Автор: {{ post.author.get_full_name }}
       </li>
       <li class="list-group-item d-flex justify-content-between align-items-center">
         <span >Всего постов автора: {{ post.author.posts.count }} </span>
@@ -36,8 +36,9 @@
         <p>{{ post.text }}</p>
         {% if user == post.author %}
           <a class="btn btn-primary" href="{% url 'posts:edit' post.id %}">редактировать пост</a>
-        <p align="right">Дата публикации: {{ post.pub_date|date:"d E Y" }}</p>
+
         {% endif %}
+               <p align="right"><span class="badge text-bg-secondary">{{ post.pub_date|date:"d E Y" }}</span></p>
         <!-- Форма добавления комментария -->
 {% load user_filters %}
 
@@ -55,17 +56,18 @@
     </div>
   </div>
 {% endif %}
-
+        <br>
 {% for comment in comments %}
  <div class="card my-4">
-    <h5 class="card-header"><a href="{% url 'posts:profile' comment.author.username %}">{{ comment.author.get_full_name }}</a></h5>
+    <h5 class="card-header"><a href="{% url 'posts:profile' comment.author.username %}">
+      <span class="badge text-bg-primary">{{ comment.author.get_full_name }}</span></a></h5>
     <div class="card-body">
       <p>
         {{ comment.text }}
       </p>
-      <p align="right">
+      <p align="right"><span class="badge text-bg-secondary">
         {{ comment.created }}
-      </p>
+      </span></p>
     </div>
   </div>
 {% endfor %}
