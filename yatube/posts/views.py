@@ -8,7 +8,7 @@ from .ulits import get_paginated_post
 
 @cache_page(20 * 1, key_prefix='index_page')
 def index(request):
-    post_list = Post.objects.order_by('-pub_date')
+    post_list = Post.objects.all()
     page_obj = get_paginated_post(request, post_list)
     context = {
         'page_obj': page_obj,
@@ -19,7 +19,7 @@ def index(request):
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    posts = Post.objects.filter(group=group).order_by('-pub_date')
+    posts = Post.objects.filter(group=group)
     page_obj = get_paginated_post(request, posts)
     context = {
         'page_obj': page_obj,
@@ -31,14 +31,12 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
-    posts = Post.objects.filter(author=author).order_by('-pub_date')
+    posts = Post.objects.filter(author=author)
     posts_other = Post.objects.exclude(author=author)
     page_obj = get_paginated_post(request, posts)
-    count_followers = Follow.objects.filter(author=author).count
     following = request.user.is_authenticated and Follow.objects.filter(
         user=request.user, author=author).exists()
     context = {
-        'count_followers': count_followers,
         'user': request.user,
         'following': following,
         'page_obj': page_obj,
@@ -51,8 +49,8 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     post = Post.objects.get(id=post_id)
-    form = CommentForm(request.POST or None)
-    comments = post.comments.all().order_by('-created')
+    form = CommentForm()
+    comments = post.comments.all()
     context = {
         'post': post,
         'form': form,
@@ -123,7 +121,7 @@ def add_comment(request, post_id):
 @login_required
 def follow_index(request):
     posts = Post.objects.filter(
-        author__following__user=request.user).order_by('-pub_date')
+        author__following__user=request.user)
     page_obj = get_paginated_post(request, posts)
     context = {
         'page_obj': page_obj,
