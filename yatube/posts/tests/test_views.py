@@ -74,8 +74,8 @@ class PostPagesTest(TestCase):
             content_type='image/gif'
         )
         group_create()
-        post_create(create_user(USER_NAME), uploaded)
-        post_create(create_user(USER_NAME_2))
+        post_create(create_user(USER_NAME))
+        post_create(create_user(USER_NAME_2), uploaded)
 
     def setUp(self):
         self.guest_client = Client()
