@@ -19,12 +19,21 @@ GROUP_TITLE = 'Тестовая группа'
 GROUP_SLUG = 'test-slug'
 GROUP_DISCRIPTION = 'Тестовое описание'
 
-TEMLATES_PAGES = {
+TEMPLATES_PAGES = {
     reverse('posts:index'): 'posts/index.html',
     (reverse('posts:group', kwargs={'slug': GROUP_SLUG})):
         'posts/group_list.html',
     (reverse('posts:profile', kwargs={'username': USER_NAME})):
         'posts/profile.html',
+}
+TEMPLATES_PAGES_FOR_TEST_IMAGE = {
+    reverse('posts:index'): 'posts/index.html',
+    (reverse('posts:group', kwargs={'slug': GROUP_SLUG})):
+        'posts/group_list.html',
+    (reverse('posts:profile', kwargs={'username': USER_NAME})):
+        'posts/profile.html',
+    (reverse('posts:post_detail', kwargs={'post_id': POST_ID})):
+        'posts/post_detail.html',
 }
 
 
@@ -58,24 +67,11 @@ class PostPagesTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
         super().setUpClass()
-        small_gif = (
-            b'\x47\x49\x46\x38\x39\x61\x02\x00'
-            b'\x01\x00\x80\x00\x00\x00\x00\x00'
-            b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
-            b'\x00\x00\x00\x2C\x00\x00\x00\x00'
-            b'\x02\x00\x01\x00\x00\x02\x02\x0C'
-            b'\x0A\x00\x3B'
-        )
-        uploaded = SimpleUploadedFile(
-            name='small.gif',
-            content=small_gif,
-            content_type='image/gif'
-        )
+        shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
         group_create()
         post_create(create_user(USER_NAME))
-        post_create(create_user(USER_NAME_2), uploaded)
+        post_create(create_user(USER_NAME_2))
 
     def setUp(self):
         self.guest_client = Client()
@@ -116,20 +112,17 @@ class PostPagesTest(TestCase):
                 self.assertIsInstance(form_field, expected)
 
     def test_posts_list_page_show_correct_context(self):
-        shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
         first_obj = 0
-        for reverse_name, template in TEMLATES_PAGES.items():
+        for reverse_name, template in TEMPLATES_PAGES.items():
             with self.subTest(reverse_name=reverse_name):
                 response = self.autorized_client.get(reverse_name)
                 first_object = response.context['page_obj'][first_obj]
-                post_image = Post.objects.first().image
                 self.assertEqual(first_object.text,
                                  POST_TEXT,
                                  f'page_obg неверно передается в {template}')
                 self.assertEqual(first_object.group.title,
                                  GROUP_TITLE,
                                  f'page_obg неверно передается в {template}')
-                self.assertEqual(post_image, 'posts/small.gif')
 
     def test_posts_correct_context_post_detail(self):
         cache.clear()
@@ -137,18 +130,39 @@ class PostPagesTest(TestCase):
             reverse('posts:post_detail', kwargs={'post_id': POST_ID})
         )
         first_object = response.context['post']
-        post_image = Post.objects.first().image
         self.assertEqual(first_object.text,
                          POST_TEXT,
                          f'post неверно передается в {response}')
         self.assertEqual(first_object.group.title,
                          GROUP_TITLE,
                          f'post неверно передается в {response}')
-        self.assertEqual(
-            post_image,
-            'posts/small.gif',
-            'Картинка передается с ошибкой'
+
+    def test_image_load(self):
+        cache.clear()
+        shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x02\x00'
+            b'\x01\x00\x80\x00\x00\x00\x00\x00'
+            b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
+            b'\x00\x00\x00\x2C\x00\x00\x00\x00'
+            b'\x02\x00\x01\x00\x00\x02\x02\x0C'
+            b'\x0A\x00\x3B'
         )
+        uploaded = SimpleUploadedFile(
+            name='small.gif',
+            content=small_gif,
+            content_type='image/gif'
+        )
+        post = Post.objects.filter(text=POST_TEXT)
+        post.image = uploaded
+        post_image = post.image.__str__()
+        for reverse_name, template in TEMPLATES_PAGES_FOR_TEST_IMAGE.items():
+            with self.subTest(reverse_name=reverse_name):
+                self.assertEqual(
+                    post_image,
+                    'small.gif',
+                    'Картинка передается с ошибкой'
+                )
 
     def test_posts_correct_context_post_edit(self):
         rev_http = reverse('posts:edit', kwargs={'post_id': POST_ID})
@@ -230,6 +244,7 @@ class PostPagesTest(TestCase):
 class PaginatorViewsTest(TestCase):
     @classmethod
     def setUpClass(cls):
+        shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
         COUNT_POST = 13
         super().setUpClass()
         group_create()
@@ -247,7 +262,7 @@ class PaginatorViewsTest(TestCase):
         cache.clear()
         ten_pages = 10
         three_pages = 3
-        for reverse_name, template in TEMLATES_PAGES.items():
+        for reverse_name, template in TEMPLATES_PAGES.items():
             with self.subTest(reverse_name=reverse_name):
                 response_one = self.client.get(reverse_name)
                 response_two = self.client.get(
