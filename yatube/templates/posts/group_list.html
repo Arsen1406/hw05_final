@@ -7,6 +7,7 @@
   <h1>{{ group.title }}</h1>
   <p>{{ group.description }}</p>
   {% for post in page_obj %}
+<div class="shadow p-3 mb-5 bg-body rounded">
   <ul>
   <li>
     Автор: {{ post.author.get_full_name }} <a href="{% url 'posts:profile' post.author %}">все посты пользователя</a><br>
@@ -16,15 +17,18 @@
   </li>
   </ul>
     {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
-      <img class="card-img my-2" src="{{ im.url }}">
+        <a href="{% url 'posts:post_detail' post.id %}">
+          <img class="card-img my-2" src="{{ im.url }}">
+        </a>
     {% endthumbnail %}
   <p>{{ post }}</p>
+  комментариев: <a href="{% url 'posts:post_detail' post.id %}">{{ post.comments.count }}</a><br>
   <a href="{% url 'posts:post_detail' post.id %}">подробная информация</a><br>
   {% if post.group %}
   <a href="{% url 'posts:group' post.group.slug %}">все записи группы</a>
+  </div>
   {% endif %}<br>
-  {% if not forloop.last %}<hr>{% endif %}
+
   {% endfor %}
   {% include 'posts/includes/paginator.html' %}
-  <a href="{% url 'posts:index' %}">Вернуться на главную страницу</a>
 {% endblock %}
