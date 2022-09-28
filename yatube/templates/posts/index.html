@@ -2,9 +2,9 @@
 {% block title %}Последние обновления на сайте{% endblock %}
 {% block content %}
 {% load thumbnail %}
- <h1><span class="badge text-bg-primary">Последние обновления на сайте</span></h1>
-{% include 'posts/includes/switcher.html' %}
-  {% for post in page_obj %}
+    <h1><span class="badge text-bg-primary">Последние обновления на сайте</span></h1>
+    {% include 'posts/includes/switcher.html' %}
+    {% for post in page_obj %}
 <div class="shadow p-3 mb-5 bg-body rounded">
     <ul>
       <li>Автор: <a href="{% url 'posts:profile' post.author %}">{{ post.author.get_full_name }}</a><br></li>
