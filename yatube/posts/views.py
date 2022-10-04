@@ -1,14 +1,14 @@
 from django.views.decorators.cache import cache_page
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Post, Group, User, Follow, Comment
+from .models import Post, Group, User, Follow
 from .forms import PostForm, CommentForm
 from .ulits import get_paginated_post
 
 
 @cache_page(20 * 1, key_prefix='index_page')
 def index(request):
-    post_list = Post.objects.all()
+    post_list = Post.objects.select_related()
     page_obj = get_paginated_post(request, post_list)
     context = {
         'page_obj': page_obj,
@@ -126,8 +126,8 @@ def follow_index(request):
     context = {
         'page_obj': page_obj,
     }
-    temlpate_name = 'posts/follow.html'
-    return render(request, temlpate_name, context)
+    template_name = 'posts/follow.html'
+    return render(request, template_name, context)
 
 
 @login_required
