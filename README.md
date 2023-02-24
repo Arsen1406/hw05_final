@@ -1,3 +1,35 @@
 # hw05_final
 
-[![CI](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml)
+Это сайт для публикации постов разной тематики. 
+На сайте ytube можно зарегистрироваться и разместить собственные посты.
+Если есть необходимость, посты можно редактировать, но только свои.
+Так же если пользователь забыл свой пароль, он может его восстановить.
+Можно просто поменять пароль, если старый надоел.
+
+Технологии:
+- Django 2.2.19
+- Python 3.7.9
+
+Клонируйте репозиторий на своё устройство:
+- git clone <ссылка на проект>
+
+Перейдите в директорию:
+- cd api_final_yatube
+
+Разверните виртуальное окружение:
+- python -m venv env или source env/bin/activate 
+
+Обновите pip:
+- python -m pip install --upgrade pip
+
+Установите зависимости из файла requirements.txt:
+- pip install -r requirements.txt
+
+Выполнить миграции:
+- python3 manage.py migrate
+
+Запустить проект:
+- python manage.py runserver
+
+Автор
+Григорян Арсен
